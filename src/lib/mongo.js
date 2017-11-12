@@ -140,12 +140,25 @@ var addNewMembers = function(rsConfig, addrsToAdd) {
   }
 
   for (var i in addrsToAdd) {
+    var exists = false;
+
     var cfg = {
       _id: ++max,
       host: addrsToAdd[i]
     };
 
-    rsConfig.members.push(cfg);
+    for (var j in rsConfig.members) {
+        var member = rsConfig.members[j];
+        if (member.host === addrsToAdd[i]) {
+          console.log("Host [%s] already exists in the Replicaset. Not adding...",addrsToAdd[i])
+          exists = true
+          break;
+        }
+    }
+
+    if (!exists){
+        rsConfig.members.push(cfg);
+    }
   }
 };
 
